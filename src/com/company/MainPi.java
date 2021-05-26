@@ -17,40 +17,28 @@ public class MainPi {
     static Color starColor = Color.of(252, 215, 5);
     static SenseHat senseHat = new SenseHat();
     public static void main(String[] args) throws IOException, InterruptedException {
-        SenseHat senseHat = new SenseHat();
-        Timer timer = new Timer();
-        Socket senderSocket = new Socket("192.168.178.21", 6666);
         ServerSocket ssReceiver = new ServerSocket(5555);
+        System.out.println("Awaiting connection...");
         Socket receiverSocket = ssReceiver.accept();
+        System.out.println("Connected!");
         while (true) {
-            try {
-                DataOutputStream dout = new DataOutputStream(senderSocket.getOutputStream());
-                dout.writeUTF(String.valueOf(senseHat.IMU.getCompass()));
-                dout.flush();
-                System.out.println("rec");
-                DataInputStream dis = new DataInputStream(receiverSocket.getInputStream());
-                System.out.println("rboee");
-                while (dis.available() > 0) {
-                    String str = dis.readUTF();
-                    System.out.println(str);
-                    if (str.equals("star 1")) {
-                        star(1);
+                        DataInputStream dis = new DataInputStream(receiverSocket.getInputStream());
+                        if (dis.available() > 0) {
+                            String str = dis.readUTF();
+                            System.out.println(str);
+                            if (str.equals("star 1")) {
+                                star(1);
+                                System.out.println("done");
+                            }
+                            if (str.equals("star 2")) {
+                                star(2);
+                            }
+                            if (str.equals("star 3")) {
+                                star(3);
+                            }
+                        }
                     }
-                    if (str.equals("star 2")) {
-                        star(2);
-                    }
-                    if (str.equals("star 3")) {
-                        star(3);
-                    }
-                }
-                System.out.println("rbo");
-            } catch (SocketException e) {
-                    System.out.println("Disconnected... trying again in 5 seconds.");
-                    Thread.sleep(5000);
-                    senderSocket = new Socket("192.168.178.21", 6666);
-            }
-        }
-    }
+             }
 
     public static void star(int ammunt) {
         if (ammunt == 1) {
@@ -68,7 +56,7 @@ public class MainPi {
             senseHat.ledMatrix.setPixel(0, 4, starColor);
             senseHat.ledMatrix.setPixel(2, 4, starColor);
             senseHat.ledMatrix.setPixel(1, 5, starColor);
-            senseHat.ledMatrix.setPixel(1, 4, starColor);
+            senseHat.ledMatrix.setPixel(1,  4, starColor);
 
             senseHat.ledMatrix.setPixel(6,4, starColor);
             senseHat.ledMatrix.setPixel(5,5, starColor);
